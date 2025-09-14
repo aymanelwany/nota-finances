@@ -661,6 +661,34 @@
             color: #333;
             text-align: center;
         }
+
+        .fixed-cost-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .fixed-cost-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1.2fr;
+            gap: 12px;
+            align-items: end;
+        }
+
+        @media (max-width: 768px) {
+            .fixed-cost-inputs {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .fixed-cost-inputs {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -805,23 +833,108 @@
             
             <!-- Fixed Costs -->
             <div style="margin-top: 24px;">
-                <h3 class="subsection-title">Monthly Fixed Costs</h3>
-                <div class="cost-grid">
-                    <div class="input-group">
-                        <label>Salaries</label>
-                        <input type="number" id="salaries" value="2000" onchange="debouncedUpdate()">
+                <h3 class="subsection-title">Monthly Fixed Costs (with Growth)</h3>
+                <div style="margin-bottom: 16px; padding: 12px; background: #e0f2fe; border-radius: 6px;">
+                    <p style="margin: 0; color: #0369a1; font-size: 14px;">
+                        💡 <strong>Dynamic Costs:</strong> Fixed costs now grow as your user base expands using compound growth.
+                        Set base amounts, growth rates (%), and user thresholds for realistic scaling projections.
+                    </p>
+                </div>
+                <div style="display: grid; gap: 20px;">
+                    <!-- Salaries -->
+                    <div class="fixed-cost-item">
+                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Salaries</label>
+                        <div class="fixed-cost-inputs">
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Base Amount ($)</label>
+                                <input type="number" id="salaries" value="2000" onchange="debouncedUpdate()" style="width: 100px;">
+                            </div>
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Growth Rate (%)</label>
+                                <input type="number" step="0.1" id="salariesGrowth" value="0.5" onchange="debouncedUpdate()" style="width: 80px;">
+                            </div>
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Per Users</label>
+                                <input type="number" id="salariesThreshold" value="1000" onchange="debouncedUpdate()" style="width: 80px;">
+                            </div>
+                            <div style="display: flex; align-items: end;">
+                                <div style="font-size: 14px; font-weight: 500; color: #16a34a;">
+                                    Current: $<span id="salariesCurrent">2000</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Office</label>
-                        <input type="number" id="office" value="0" onchange="debouncedUpdate()">
+
+                    <!-- Office -->
+                    <div class="fixed-cost-item">
+                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Office</label>
+                        <div class="fixed-cost-inputs">
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Base Amount ($)</label>
+                                <input type="number" id="office" value="0" onchange="debouncedUpdate()" style="width: 100px;">
+                            </div>
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Growth Rate (%)</label>
+                                <input type="number" step="0.1" id="officeGrowth" value="0.3" onchange="debouncedUpdate()" style="width: 80px;">
+                            </div>
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Per Users</label>
+                                <input type="number" id="officeThreshold" value="2000" onchange="debouncedUpdate()" style="width: 80px;">
+                            </div>
+                            <div style="display: flex; align-items: end;">
+                                <div style="font-size: 14px; font-weight: 500; color: #16a34a;">
+                                    Current: $<span id="officeCurrent">0</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Marketing</label>
-                        <input type="number" id="marketing" value="1000" onchange="debouncedUpdate()">
+
+                    <!-- Marketing -->
+                    <div class="fixed-cost-item">
+                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Marketing</label>
+                        <div class="fixed-cost-inputs">
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Base Amount ($)</label>
+                                <input type="number" id="marketing" value="1000" onchange="debouncedUpdate()" style="width: 100px;">
+                            </div>
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Growth Rate (%)</label>
+                                <input type="number" step="0.1" id="marketingGrowth" value="0.4" onchange="debouncedUpdate()" style="width: 80px;">
+                            </div>
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Per Users</label>
+                                <input type="number" id="marketingThreshold" value="1500" onchange="debouncedUpdate()" style="width: 80px;">
+                            </div>
+                            <div style="display: flex; align-items: end;">
+                                <div style="font-size: 14px; font-weight: 500; color: #16a34a;">
+                                    Current: $<span id="marketingCurrent">1000</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Other</label>
-                        <input type="number" id="other" value="1000" onchange="debouncedUpdate()">
+
+                    <!-- Other -->
+                    <div class="fixed-cost-item">
+                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Other</label>
+                        <div class="fixed-cost-inputs">
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Base Amount ($)</label>
+                                <input type="number" id="other" value="1000" onchange="debouncedUpdate()" style="width: 100px;">
+                            </div>
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Growth Rate (%)</label>
+                                <input type="number" step="0.1" id="otherGrowth" value="0.2" onchange="debouncedUpdate()" style="width: 80px;">
+                            </div>
+                            <div class="input-group" style="margin: 0;">
+                                <label style="font-size: 12px;">Per Users</label>
+                                <input type="number" id="otherThreshold" value="2500" onchange="debouncedUpdate()" style="width: 80px;">
+                            </div>
+                            <div style="display: flex; align-items: end;">
+                                <div style="font-size: 14px; font-weight: 500; color: #16a34a;">
+                                    Current: $<span id="otherCurrent">1000</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1119,6 +1232,40 @@
             element.value = value;
             return value;
         }
+
+        // Calculate compound growth for fixed costs
+        function calculateCompoundGrowth(baseAmount, growthRate, threshold, currentUsers) {
+            if (threshold <= 0 || currentUsers <= 0) return baseAmount;
+            const growthMultiplier = currentUsers / threshold;
+            return baseAmount * Math.pow(1 + (growthRate / 100), growthMultiplier);
+        }
+
+        // Update current cost displays
+        function updateFixedCostDisplays(users) {
+            const salariesBase = parseFloat(document.getElementById('salaries').value) || 0;
+            const salariesGrowth = parseFloat(document.getElementById('salariesGrowth').value) || 0;
+            const salariesThreshold = parseFloat(document.getElementById('salariesThreshold').value) || 1000;
+            const currentSalaries = calculateCompoundGrowth(salariesBase, salariesGrowth, salariesThreshold, users);
+            document.getElementById('salariesCurrent').textContent = Math.round(currentSalaries);
+
+            const officeBase = parseFloat(document.getElementById('office').value) || 0;
+            const officeGrowth = parseFloat(document.getElementById('officeGrowth').value) || 0;
+            const officeThreshold = parseFloat(document.getElementById('officeThreshold').value) || 1000;
+            const currentOffice = calculateCompoundGrowth(officeBase, officeGrowth, officeThreshold, users);
+            document.getElementById('officeCurrent').textContent = Math.round(currentOffice);
+
+            const marketingBase = parseFloat(document.getElementById('marketing').value) || 0;
+            const marketingGrowth = parseFloat(document.getElementById('marketingGrowth').value) || 0;
+            const marketingThreshold = parseFloat(document.getElementById('marketingThreshold').value) || 1000;
+            const currentMarketing = calculateCompoundGrowth(marketingBase, marketingGrowth, marketingThreshold, users);
+            document.getElementById('marketingCurrent').textContent = Math.round(currentMarketing);
+
+            const otherBase = parseFloat(document.getElementById('other').value) || 0;
+            const otherGrowth = parseFloat(document.getElementById('otherGrowth').value) || 0;
+            const otherThreshold = parseFloat(document.getElementById('otherThreshold').value) || 1000;
+            const currentOther = calculateCompoundGrowth(otherBase, otherGrowth, otherThreshold, users);
+            document.getElementById('otherCurrent').textContent = Math.round(currentOther);
+        }
         
         // Generate hash of all inputs for caching
         function getInputHash() {
@@ -1276,37 +1423,41 @@
         
         function updateBreakEvenAnalysis(data) {
             const {projections, lastMonth, variableCostPerUser} = data;
-            
+
             // Get current inputs
             const premiumPrice = parseFloat(document.getElementById('premiumPrice').value) || 3.00;
             const premiumConversion = parseFloat(document.getElementById('premiumConversion').value) || 20;
-            const marketing = parseFloat(document.getElementById('marketing').value) || 1000;
-            const salaries = parseFloat(document.getElementById('salaries').value) || 0;
-            const office = parseFloat(document.getElementById('office').value) || 0;
-            const servers = 0; // Servers removed from UI
-            const other = parseFloat(document.getElementById('other').value) || 0;
-            
-            const fixedCosts = salaries + office + marketing + other;
             const revenuePerUser = (premiumPrice * premiumConversion / 100);
-            
-            // Calculate break-even metrics
-            const breakEven = calculateBreakEven(fixedCosts, variableCostPerUser, revenuePerUser);
-            const unitEcon = calculateUnitEconomics(marketing, lastMonth.users, revenuePerUser, variableCostPerUser);
-            
-            // Find break-even month from projections
+
+            // For break-even with dynamic costs, we need to find it from projections
             let breakEvenMonth = null;
+            let breakEvenUsers = 0;
+            let breakEvenRevenue = 0;
+
             for (let i = 0; i < projections.length; i++) {
-                if (projections[i].users >= breakEven.users) {
+                if (projections[i].profit >= 0) {
                     breakEvenMonth = i + 1;
+                    breakEvenUsers = projections[i].users;
+                    breakEvenRevenue = projections[i].revenue;
                     break;
                 }
             }
-            
+
+            // Calculate unit economics using current marketing costs
+            const currentMarketing = calculateCompoundGrowth(
+                parseFloat(document.getElementById('marketing').value) || 0,
+                parseFloat(document.getElementById('marketingGrowth').value) || 0,
+                parseFloat(document.getElementById('marketingThreshold').value) || 1000,
+                lastMonth.users
+            );
+
+            const unitEcon = calculateUnitEconomics(currentMarketing, lastMonth.users, revenuePerUser, variableCostPerUser);
+
             // Update UI
-            document.getElementById('breakEvenUsers').textContent = breakEven.users.toLocaleString();
-            document.getElementById('breakEvenRevenue').textContent = formatCurrency(breakEven.revenue);
+            document.getElementById('breakEvenUsers').textContent = breakEvenUsers > 0 ? breakEvenUsers.toLocaleString() : '>150K';
+            document.getElementById('breakEvenRevenue').textContent = breakEvenRevenue > 0 ? formatCurrency(breakEvenRevenue) : 'N/A';
             document.getElementById('monthsToBreakEven').textContent = breakEvenMonth || '>24';
-            
+
             document.getElementById('cac').textContent = formatCurrency(unitEcon.cac);
             document.getElementById('ltvCacRatio').textContent = unitEcon.ltvCacRatio.toFixed(1) + 'x';
             document.getElementById('paybackPeriod').textContent = unitEcon.paybackPeriod.toFixed(1);
@@ -1431,10 +1582,21 @@
             document.getElementById('gpt4Display').textContent = gpt4Cost.toFixed(3);
             document.getElementById('firebaseDisplay').textContent = firebaseCost.toFixed(3);
             
-            const salaries = validateInput(document.getElementById('salaries'), 0, 1000000);
-            const office = validateInput(document.getElementById('office'), 0, 100000);
-            const marketing = validateInput(document.getElementById('marketing'), 0, 500000);
-            const other = validateInput(document.getElementById('other'), 0, 100000);
+            const salariesBase = validateInput(document.getElementById('salaries'), 0, 1000000);
+            const salariesGrowth = validateInput(document.getElementById('salariesGrowth'), 0, 50);
+            const salariesThreshold = validateInput(document.getElementById('salariesThreshold'), 1, 100000);
+
+            const officeBase = validateInput(document.getElementById('office'), 0, 100000);
+            const officeGrowth = validateInput(document.getElementById('officeGrowth'), 0, 50);
+            const officeThreshold = validateInput(document.getElementById('officeThreshold'), 1, 100000);
+
+            const marketingBase = validateInput(document.getElementById('marketing'), 0, 500000);
+            const marketingGrowth = validateInput(document.getElementById('marketingGrowth'), 0, 50);
+            const marketingThreshold = validateInput(document.getElementById('marketingThreshold'), 1, 100000);
+
+            const otherBase = validateInput(document.getElementById('other'), 0, 100000);
+            const otherGrowth = validateInput(document.getElementById('otherGrowth'), 0, 50);
+            const otherThreshold = validateInput(document.getElementById('otherThreshold'), 1, 100000);
             
             const premiumPrice = validateInput(document.getElementById('premiumPrice'), 0, 1000);
             const premiumConversion = validateInput(document.getElementById('premiumConversion'), 0, 100);
@@ -1464,12 +1626,17 @@
             const projections = [];
             let totalBurn = 0;
             let firstProfitableMonth = null;
-            
-            const fixedCosts = salaries + office + marketing + other;
-            
+
             for (let i = 1; i <= months; i++) {
                 const users = Math.round(startingUsers * Math.pow(1 + growthRate, i - 1));
-                
+
+                // Calculate compound growth for each fixed cost category
+                const currentSalaries = calculateCompoundGrowth(salariesBase, salariesGrowth, salariesThreshold, users);
+                const currentOffice = calculateCompoundGrowth(officeBase, officeGrowth, officeThreshold, users);
+                const currentMarketing = calculateCompoundGrowth(marketingBase, marketingGrowth, marketingThreshold, users);
+                const currentOther = calculateCompoundGrowth(otherBase, otherGrowth, otherThreshold, users);
+
+                const fixedCosts = currentSalaries + currentOffice + currentMarketing + currentOther;
                 const variableCosts = users * variableCostPerUser;
                 const totalCosts = variableCosts + fixedCosts;
                 
@@ -1626,8 +1793,9 @@
         
         function updateUI(data) {
             const {projections, lastMonth, year1Month, totalBurn, firstProfitableMonth, variableCostPerUser} = data;
-            
+
             updateLoanDisplays(lastMonth.users);
+            updateFixedCostDisplays(lastMonth.users);
             
             document.getElementById('year1Users').textContent = year1Month.users.toLocaleString();
             document.getElementById('year2Users').textContent = lastMonth.users.toLocaleString();
