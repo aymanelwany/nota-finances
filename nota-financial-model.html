@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nota Financial Model Calculator - 2 Year Projection</title>
+    <title>Nota Financial Model Calculator - 3 Year Projection</title>
     <style>
         * {
             margin: 0;
@@ -216,6 +216,107 @@
             border-radius: 8px;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Step-based styling */
+        .step-container {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #e5e7eb;
+        }
+
+        .step-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .step-intro {
+            background: #f8fafc;
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .step-content {
+            padding: 24px;
+        }
+
+        .progress-bar {
+            background: #f3f4f6;
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(to right, #10b981, #059669);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 16px;
+        }
+
+        .next-button {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .next-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .simplified-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .simple-card {
+            background: #f8fafc;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .simple-card.active {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .conclusion-box {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
         }
         
         .summary-grid {
@@ -697,8 +798,8 @@
         <div class="header">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
                 <div>
-                    <h1>Nota Financial Model Calculator</h1>
-                    <p>Financial Assistant for Micro SMEs - 2 Year Projections</p>
+                    <h1>🚀 Your Business Financial Plan</h1>
+                    <p>Build your 3-year plan in 5 simple steps - no finance degree required!</p>
                 </div>
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <div>
@@ -718,441 +819,546 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Cost Per User Card -->
-        <div class="cost-per-user-card">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
-                <div>
-                    <h3 style="font-size: 18px; margin-bottom: 8px; color: white;">Total Cost Per User (Monthly)</h3>
-                    <p style="opacity: 0.9; font-size: 14px; color: rgba(255,255,255,0.9);">
-                        Whisper ($<span id="whisperDisplay">0.450</span>) + GPT-4 ($<span id="gpt4Display">0.105</span>) + Firebase ($<span id="firebaseDisplay">0.003</span>)
-                    </p>
-                </div>
-                <div style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 8px;">
-                    <span style="font-size: 24px; color: white;">$</span>
-                    <input type="number" step="0.001" id="costPerUserQuick" value="0.558" class="cost-input-large"
-                           onchange="updateFromTotalCost()"
-                           title="Edit total cost per user">
-                    <span style="font-size: 18px; opacity: 0.9; color: white;">/user</span>
-                </div>
+
+        <!-- Progress Bar -->
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-weight: 600; color: #374151;">Your Progress</span>
+                <span style="font-size: 14px; color: #6b7280;" id="progressText">Step 1 of 5</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 20%;"></div>
             </div>
         </div>
         
-        <!-- Key Metrics -->
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-label">Year 1 / Year 2 Users</div>
-                <div class="metric-value text-blue"><span id="year1Users">50,000</span></div>
-                <div class="metric-sub">Year 2: <span id="year2Users">150,000</span></div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Monthly Revenue (End Y2)</div>
-                <div class="metric-value text-green" id="finalRevenue">$99,900</div>
-                <div class="metric-sub">ARPU: $<span id="arpu">2.00</span></div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Monthly Profit (End Y2)</div>
-                <div class="metric-value" id="finalProfit">$10,000</div>
-                <div class="metric-sub">Year 1: $<span id="year1Profit">0</span></div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Runway</div>
-                <div class="metric-value text-purple" id="runway">∞</div>
-                <div class="metric-sub">Cash: $<span id="cashPosition">500,000</span></div>
-            </div>
-        </div>
-        
-        <!-- Configuration -->
-        <div class="config-section">
-            <h2 class="section-title">Model Configuration</h2>
-            
-            <!-- Growth Scenario -->
-            <div>
-                <h3 class="subsection-title">Growth Scenario & Timeline</h3>
-                <div class="button-grid">
-                    <button class="scenario-btn" onclick="setScenario('conservative')" data-scenario="conservative">
-                        <div style="font-weight: 500;">Conservative</div>
-                        <div style="font-size: 14px;">15%</div>
-                    </button>
-                    <button class="scenario-btn active" onclick="setScenario('base')" data-scenario="base">
-                        <div style="font-weight: 500;">Base</div>
-                        <div style="font-size: 14px;">30%</div>
-                    </button>
-                    <button class="scenario-btn" onclick="setScenario('aggressive')" data-scenario="aggressive">
-                        <div style="font-weight: 500;">Aggressive</div>
-                        <div style="font-size: 14px;">50%</div>
-                    </button>
-                    <button class="scenario-btn" onclick="setScenario('custom')" data-scenario="custom">
-                        <div style="font-weight: 500;">Custom</div>
-                        <div style="font-size: 14px;"><span id="customRateDisplay">30</span>%</div>
-                    </button>
-                </div>
-                <div id="customRateInput" style="display: none; margin-top: 12px;">
-                    <label>Custom Growth Rate (%)</label>
-                    <input type="number" id="customRate" value="30" onchange="debouncedUpdate()">
-                </div>
-                <div style="margin-top: 16px; padding: 12px; background: #f3f4f6; border-radius: 6px;">
-                    <p style="margin: 0; color: #4b5563;">
-                        📊 <strong>Timeline:</strong> 24 months | 
-                        <strong>Y1 Target:</strong> 50,000 users | 
-                        <strong>Growth Rate:</strong> <span id="currentGrowthRate">30</span>%/month
-                    </p>
-                </div>
-            </div>
-            
-            <!-- Initial Funding -->
-            <div style="margin-top: 24px;">
-                <h3 class="subsection-title">Initial Funding</h3>
-                <div class="input-group" style="max-width: 200px;">
-                    <input type="number" id="initialFunding" value="500000" onchange="debouncedUpdate()">
-                </div>
-            </div>
-            
-            <!-- Variable Costs -->
-            <div style="margin-top: 24px;">
-                <h3 class="subsection-title">Variable Costs (Per User/Month)</h3>
-                <div class="cost-grid">
-                    <div class="input-group">
-                        <label>Whisper API</label>
-                        <input type="number" step="0.001" id="whisperCost" value="0.45" onchange="debouncedUpdate()">
-                    </div>
-                    <div class="input-group">
-                        <label>GPT-4 API</label>
-                        <input type="number" step="0.001" id="gpt4Cost" value="0.105" onchange="debouncedUpdate()">
-                    </div>
-                    <div class="input-group">
-                        <label>Firebase</label>
-                        <input type="number" step="0.001" id="firebaseCost" value="0.003" onchange="debouncedUpdate()">
-                    </div>
-                    <div class="input-group">
-                        <label style="font-weight: bold;">Total/User</label>
-                        <input type="number" id="totalVariableCost" value="0.558" disabled style="background: #f5f5f5; font-weight: bold;">
+        <!-- Step 1: Business Basics -->
+        <div class="step-container" id="step1">
+            <div class="step-header">
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h2 style="margin: 0; font-size: 24px;">Your Business Basics</h2>
+                        <p style="margin: 8px 0 0 0; opacity: 0.9;">Let's start with the foundation - how fast you want to grow and how much money you're starting with</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- Fixed Costs -->
-            <div style="margin-top: 24px;">
-                <h3 class="subsection-title">Monthly Fixed Costs (with Growth)</h3>
-                <div style="margin-bottom: 16px; padding: 12px; background: #e0f2fe; border-radius: 6px;">
-                    <p style="margin: 0; color: #0369a1; font-size: 14px;">
-                        💡 <strong>Dynamic Costs:</strong> Fixed costs now grow as your user base expands using compound growth.
-                        Set base amounts, growth rates (%), and user thresholds for realistic scaling projections.
-                    </p>
-                </div>
-                <div style="display: grid; gap: 20px;">
-                    <!-- Salaries -->
-                    <div class="fixed-cost-item">
-                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Salaries</label>
-                        <div class="fixed-cost-inputs">
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Base Amount ($)</label>
-                                <input type="number" id="salaries" value="2000" onchange="debouncedUpdate()" style="width: 100px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Growth Rate (%)</label>
-                                <input type="number" step="0.1" id="salariesGrowth" value="0.5" onchange="debouncedUpdate()" style="width: 80px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Per Users</label>
-                                <input type="number" id="salariesThreshold" value="1000" onchange="debouncedUpdate()" style="width: 80px;">
-                            </div>
-                            <div style="display: flex; align-items: end;">
-                                <div style="font-size: 14px; font-weight: 500; color: #16a34a;">
-                                    Current: $<span id="salariesCurrent">2000</span>
-                                </div>
-                            </div>
+
+            <div class="step-intro">
+                <p style="margin: 0; color: #374151; line-height: 1.6;">
+                    📈 <strong>Think of this like planning a road trip:</strong> You need to know how fast you want to drive (growth rate) and how much gas money you have (initial funding). Don't worry about being perfect - you can always adjust these later!
+                </p>
+            </div>
+
+            <div class="step-content">
+                <!-- Growth Scenario -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1f2937; margin-bottom: 16px;">🚀 How fast do you want to grow?</h3>
+                    <p style="color: #6b7280; margin-bottom: 16px;">Pick the growth speed that feels right for your business. Most startups aim for 20-40% monthly growth.</p>
+                    <div class="simplified-grid">
+                        <div class="simple-card" onclick="selectGrowth('conservative')" data-scenario="conservative">
+                            <h4 style="margin: 0 0 8px 0; color: #1f2937;">🐢 Steady & Safe</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #059669; margin-bottom: 8px;">15%</div>
+                            <p style="margin: 0; font-size: 14px; color: #6b7280;">Monthly growth</p>
+                        </div>
+                        <div class="simple-card active" onclick="selectGrowth('base')" data-scenario="base">
+                            <h4 style="margin: 0 0 8px 0; color: #1f2937;">🎯 Balanced</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #059669; margin-bottom: 8px;">30%</div>
+                            <p style="margin: 0; font-size: 14px; color: #6b7280;">Monthly growth</p>
+                        </div>
+                        <div class="simple-card" onclick="selectGrowth('aggressive')" data-scenario="aggressive">
+                            <h4 style="margin: 0 0 8px 0; color: #1f2937;">🚀 Fast & Bold</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #059669; margin-bottom: 8px;">50%</div>
+                            <p style="margin: 0; font-size: 14px; color: #6b7280;">Monthly growth</p>
                         </div>
                     </div>
 
-                    <!-- Office -->
-                    <div class="fixed-cost-item">
-                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Office</label>
-                        <div class="fixed-cost-inputs">
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Base Amount ($)</label>
-                                <input type="number" id="office" value="0" onchange="debouncedUpdate()" style="width: 100px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Growth Rate (%)</label>
-                                <input type="number" step="0.1" id="officeGrowth" value="0.3" onchange="debouncedUpdate()" style="width: 80px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Per Users</label>
-                                <input type="number" id="officeThreshold" value="2000" onchange="debouncedUpdate()" style="width: 80px;">
-                            </div>
-                            <div style="display: flex; align-items: end;">
-                                <div style="font-size: 14px; font-weight: 500; color: #16a34a;">
-                                    Current: $<span id="officeCurrent">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Marketing -->
-                    <div class="fixed-cost-item">
-                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Marketing</label>
-                        <div class="fixed-cost-inputs">
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Base Amount ($)</label>
-                                <input type="number" id="marketing" value="1000" onchange="debouncedUpdate()" style="width: 100px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Growth Rate (%)</label>
-                                <input type="number" step="0.1" id="marketingGrowth" value="0.4" onchange="debouncedUpdate()" style="width: 80px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Per Users</label>
-                                <input type="number" id="marketingThreshold" value="1500" onchange="debouncedUpdate()" style="width: 80px;">
-                            </div>
-                            <div style="display: flex; align-items: end;">
-                                <div style="font-size: 14px; font-weight: 500; color: #16a34a;">
-                                    Current: $<span id="marketingCurrent">1000</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Other -->
-                    <div class="fixed-cost-item">
-                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Other</label>
-                        <div class="fixed-cost-inputs">
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Base Amount ($)</label>
-                                <input type="number" id="other" value="1000" onchange="debouncedUpdate()" style="width: 100px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Growth Rate (%)</label>
-                                <input type="number" step="0.1" id="otherGrowth" value="0.2" onchange="debouncedUpdate()" style="width: 80px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Per Users</label>
-                                <input type="number" id="otherThreshold" value="2500" onchange="debouncedUpdate()" style="width: 80px;">
-                            </div>
-                            <div style="display: flex; align-items: end;">
-                                <div style="font-size: 14px; font-weight: 500; color: #16a34a;">
-                                    Current: $<span id="otherCurrent">1000</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Revenue Streams -->
-            <div style="margin-top: 24px;">
-                <h3 class="subsection-title">Revenue Streams</h3>
-                
-                <!-- Premium Subscriptions -->
-                <div class="revenue-card">
-                    <h4>Premium Subscriptions</h4>
-                    <div class="revenue-inputs">
-                        <div class="input-group">
-                            <label>Monthly Price ($)</label>
-                            <input type="number" step="0.01" id="premiumPrice" value="3.00" onchange="debouncedUpdate()">
-                        </div>
-                        <div class="input-group">
-                            <label>Conversion Rate (%)</label>
-                            <input type="number" id="premiumConversion" value="20" onchange="debouncedUpdate()">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Dual Loan Model -->
-                <div class="revenue-card">
-                    <h4>💰 Loan Matching - Dual Market Model</h4>
-                    
-                    <!-- Model 1 -->
-                    <div style="background: #e0f2fe; padding: 12px; border-radius: 6px; margin: 10px 0; border: 2px solid #0284c7;">
-                        <h5 style="color: #0369a1; margin-bottom: 10px;">Model 1: Developing Market / Microloans</h5>
-                        <div class="loan-model-inputs">
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Avg Loan ($)</label>
-                                <input type="number" id="loanSize1" value="2000" onchange="debouncedUpdate()" style="padding: 6px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Commission (%)</label>
-                                <input type="number" step="0.1" id="commission1" value="0.5" onchange="debouncedUpdate()" style="padding: 6px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">User Reach (%)</label>
-                                <input type="number" id="userReach1" value="20" onchange="debouncedUpdate()" style="padding: 6px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Success Rate (%)</label>
-                                <input type="number" id="successRate1" value="15" onchange="debouncedUpdate()" style="padding: 6px;">
-                            </div>
-                        </div>
-                        <div style="margin-top: 10px; padding: 8px; background: white; border-radius: 4px;">
-                            <p style="margin: 0; font-size: 12px;">
-                                Commission/loan: $<span id="commissionPerLoan1">10</span> | 
-                                Loans/month: <span id="loansPerMonth1">0</span> |
-                                Revenue: $<span id="loanRevenue1">0</span>
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Model 2 -->
-                    <div style="background: #dcfce7; padding: 12px; border-radius: 6px; margin: 10px 0; border: 2px solid #16a34a;">
-                        <h5 style="color: #14532d; margin-bottom: 10px;">Model 2: Standard Market / SME Loans</h5>
-                        <div class="loan-model-inputs">
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Avg Loan ($)</label>
-                                <input type="number" id="loanSize2" value="5000" onchange="debouncedUpdate()" style="padding: 6px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Commission (%)</label>
-                                <input type="number" step="0.1" id="commission2" value="0.5" onchange="debouncedUpdate()" style="padding: 6px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">User Reach (%)</label>
-                                <input type="number" id="userReach2" value="10" onchange="debouncedUpdate()" style="padding: 6px;">
-                            </div>
-                            <div class="input-group" style="margin: 0;">
-                                <label style="font-size: 12px;">Success Rate (%)</label>
-                                <input type="number" id="successRate2" value="10" onchange="debouncedUpdate()" style="padding: 6px;">
-                            </div>
-                        </div>
-                        <div style="margin-top: 10px; padding: 8px; background: white; border-radius: 4px;">
-                            <p style="margin: 0; font-size: 12px;">
-                                Commission/loan: $<span id="commissionPerLoan2">25</span> | 
-                                Loans/month: <span id="loansPerMonth2">0</span> |
-                                Revenue: $<span id="loanRevenue2">0</span>
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Total -->
-                    <div style="background: #fef3c7; padding: 12px; border-radius: 6px; border: 2px solid #f59e0b;">
-                        <p style="margin: 0; font-size: 14px; font-weight: 600; color: #92400e;">
-                            Total Loan Revenue: $<span id="totalLoanRevenue" style="font-size: 18px;">0</span>/month
+                    <div style="margin-top: 20px; padding: 16px; background: #f3f4f6; border-radius: 8px;">
+                        <p style="margin: 0; color: #4b5563; font-size: 14px;">
+                            📊 <strong>With this growth rate:</strong> You'll reach <strong>50,000 users</strong> by the end of Year 1, then continue growing for 3 full years.
                         </p>
                     </div>
                 </div>
-            </div>
-        </div>
-        
-<!-- Projections Table -->
-        <div class="config-section">
-            <h3 class="subsection-title">Monthly Projections (24 Months)</h3>
-            <div class="table-container" style="overflow-x: auto; max-height: 600px; overflow-y: auto; -webkit-overflow-scrolling: touch;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>MONTH</th>
-                            <th>USERS</th>
-                            <th>REVENUE</th>
-                            <th>COSTS</th>
-                            <th>PROFIT/LOSS</th>
-                            <th>CASH POSITION</th>
-                            <th>ARPU</th>
-                        </tr>
-                    </thead>
-                    <tbody id="projectionsTable">
-                        <!-- Table rows will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-        <!-- Break-Even Analysis -->
-        <div class="config-section">
-            <h3 class="subsection-title">📊 Break-Even Analysis & Key Metrics</h3>
-            
-            <div class="break-even-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px;">
-                <!-- Break-Even Metrics -->
-                <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 20px; border-radius: 8px; color: white;">
-                    <h4 style="margin-bottom: 16px; font-size: 18px;">Break-Even Analysis</h4>
-                    <div style="display: grid; gap: 12px;">
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">Break-Even Users (Monthly)</div>
-                            <div style="font-size: 24px; font-weight: bold;" id="breakEvenUsers">12,500</div>
+
+                <!-- Initial Funding -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1f2937; margin-bottom: 16px;">💰 How much money are you starting with?</h3>
+                    <p style="color: #6b7280; margin-bottom: 16px;">This is your initial funding - could be savings, investment, or a loan. Don't worry, we'll show you exactly how this gets used.</p>
+                    <div style="max-width: 300px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Starting Cash</label>
+                        <div style="position: relative;">
+                            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #6b7280;">$</span>
+                            <input type="number" id="initialFundingStep" value="500000" onchange="updateFunding()" oninput="updateFunding()"
+                                   style="width: 100%; padding: 12px 12px 12px 32px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; font-weight: 600;">
                         </div>
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">Break-Even Revenue (Monthly)</div>
-                            <div style="font-size: 18px; font-weight: bold;" id="breakEvenRevenue">$25,000</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">Months to Break-Even</div>
-                            <div style="font-size: 18px; font-weight: bold;" id="monthsToBreakEven">8</div>
-                        </div>
+                        <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">💡 Tip: $500,000 is a good starting point for most tech businesses</p>
                     </div>
                 </div>
-                
-                <!-- Unit Economics -->
-                <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 20px; border-radius: 8px; color: white;">
-                    <h4 style="margin-bottom: 16px; font-size: 18px;">Unit Economics</h4>
-                    <div style="display: grid; gap: 12px;">
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">
-                                Customer Acquisition Cost
-                                <span class="info-icon" onclick="showCACModal()" title="How is CAC calculated?">i</span>
+
+                <button class="next-button" onclick="goToStep(2)">Continue to Step 2: Your Costs →</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Costs -->
+        <div class="step-container" id="step2" style="display: none;">
+            <div class="step-header">
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h2 style="margin: 0; font-size: 24px;">What You Spend</h2>
+                        <p style="margin: 8px 0 0 0; opacity: 0.9;">Let's figure out how much it costs to run your business each month</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-intro">
+                <p style="margin: 0; color: #374151; line-height: 1.6;">
+                    💳 <strong>Every business has two types of costs:</strong> Fixed costs (like rent - same every month) and variable costs (like materials - change based on how many customers you have). We'll keep this simple!
+                </p>
+            </div>
+
+            <div class="step-content">
+                <!-- Variable Costs -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1f2937; margin-bottom: 16px;">📱 Cost Per User (Changes with customer count)</h3>
+                    <p style="color: #6b7280; margin-bottom: 16px;">These are the API costs that increase as you get more users. Think of it like electricity - the more you use, the more you pay.</p>
+
+                    <div class="cost-per-user-card">
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                            <div>
+                                <h3 style="font-size: 18px; margin-bottom: 8px; color: white;">Total Cost Per User (Monthly)</h3>
+                                <p style="opacity: 0.9; font-size: 14px; color: rgba(255,255,255,0.9);">
+                                    Whisper ($<span id="whisperDisplay">0.450</span>) + GPT-4 ($<span id="gpt4Display">0.105</span>) + Firebase ($<span id="firebaseDisplay">0.003</span>)
+                                </p>
                             </div>
-                            <div style="font-size: 24px; font-weight: bold;" id="cac">$2.50</div>
+                            <div style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 8px;">
+                                <span style="font-size: 24px; color: white;">$</span>
+                                <input type="number" step="0.001" id="costPerUserQuick" value="0.558" class="cost-input-large"
+                                       onchange="updateFromTotalCost()"
+                                       title="Edit total cost per user">
+                                <span style="font-size: 18px; opacity: 0.9; color: white;">/user</span>
+                            </div>
                         </div>
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">LTV:CAC Ratio</div>
-                            <div style="font-size: 18px; font-weight: bold;" id="ltvCacRatio">8.0x</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">Payback Period (Months)</div>
-                            <div style="font-size: 18px; font-weight: bold;" id="paybackPeriod">3.2</div>
-                        </div>
+                    </div>
+
+                    <div style="margin-top: 16px; padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #10b981;">
+                        <p style="margin: 0; color: #15803d; font-size: 14px;">
+                            💡 <strong>What this means:</strong> For every customer you have, you'll pay about $0.56 per month in API costs. So 1,000 customers = $560/month in variable costs.
+                        </p>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Sensitivity Sliders -->
-            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                <h4 style="margin-bottom: 16px; font-size: 16px; color: #1a202c;">🎚️ Sensitivity Analysis</h4>
-                <div class="sensitivity-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                    <div>
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #4a5568;">Premium Conversion Rate: <span id="sensitivityConversion">20%</span></label>
-                        <input type="range" id="sensitivityConversionSlider" min="5" max="50" value="20" step="1" 
-                               onchange="updateSensitivity()" style="width: 100%;">
+
+                <!-- Fixed Costs -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1f2937; margin-bottom: 16px;">🏢 Monthly Fixed Costs (Same every month, but grow as you scale)</h3>
+                    <p style="color: #6b7280; margin-bottom: 16px;">These are your ongoing business expenses. As you grow, you'll need more staff and bigger marketing budgets.</p>
+
+                    <div class="simplified-grid">
+                        <div class="simple-card">
+                            <h4 style="margin: 0 0 12px 0; color: #1f2937;">👥 Team Salaries</h4>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="color: #6b7280;">$</span>
+                                <input type="number" id="salariesStep" value="2000" onchange="updateSalaries()" oninput="updateSalaries()"
+                                       style="border: 1px solid #d1d5db; border-radius: 4px; padding: 8px; width: 100px; text-align: center;">
+                                <span style="color: #6b7280; font-size: 14px;">/month</span>
+                            </div>
+                            <p style="margin: 0; font-size: 12px; color: #6b7280;">Currently: $<span id="salariesCurrent">2000</span></p>
+                        </div>
+
+                        <div class="simple-card">
+                            <h4 style="margin: 0 0 12px 0; color: #1f2937;">📢 Marketing</h4>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="color: #6b7280;">$</span>
+                                <input type="number" id="marketingStep" value="1000" onchange="updateMarketing()" oninput="updateMarketing()"
+                                       style="border: 1px solid #d1d5db; border-radius: 4px; padding: 8px; width: 100px; text-align: center;">
+                                <span style="color: #6b7280; font-size: 14px;">/month</span>
+                            </div>
+                            <p style="margin: 0; font-size: 12px; color: #6b7280;">Currently: $<span id="marketingCurrent">1000</span></p>
+                        </div>
+
+                        <div class="simple-card">
+                            <h4 style="margin: 0 0 12px 0; color: #1f2937;">🏠 Office & Other</h4>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="color: #6b7280;">$</span>
+                                <input type="number" id="otherStep" value="1000" onchange="updateOther()" oninput="updateOther()"
+                                       style="border: 1px solid #d1d5db; border-radius: 4px; padding: 8px; width: 100px; text-align: center;">
+                                <span style="color: #6b7280; font-size: 14px;">/month</span>
+                            </div>
+                            <p style="margin: 0; font-size: 12px; color: #6b7280;">Currently: $<span id="otherCurrent">1000</span></p>
+                        </div>
                     </div>
-                    <div>
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #4a5568;">Monthly Growth Rate: <span id="sensitivityGrowth">30%</span></label>
-                        <input type="range" id="sensitivityGrowthSlider" min="5" max="100" value="30" step="5" 
-                               onchange="updateSensitivity()" style="width: 100%;">
-                    </div>
-                    <div>
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #4a5568;">Variable Cost/User: <span id="sensitivityCost">$0.56</span></label>
-                        <input type="range" id="sensitivityCostSlider" min="0.1" max="2.0" value="0.56" step="0.01" 
-                               onchange="updateSensitivity()" style="width: 100%;">
+
+                    <div style="margin-top: 16px; padding: 16px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                        <p style="margin: 0; color: #92400e; font-size: 14px;">
+                            📈 <strong>Smart Growth:</strong> These costs automatically increase as your business grows. More users means you'll need more staff and bigger marketing budgets.
+                        </p>
                     </div>
                 </div>
-                <div style="margin-top: 16px; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
-                    <div style="font-size: 14px; color: #4a5568;">Impact on Break-Even:</div>
-                    <div style="font-size: 18px; font-weight: bold; color: #1a202c;" id="sensitivityImpact">Break-even in 8 months with 12,500 users</div>
+
+                <div style="display: flex; gap: 12px;">
+                    <button style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;" onclick="goToStep(1)">← Back</button>
+                    <button class="next-button" onclick="goToStep(3)">Continue to Step 3: Your Revenue →</button>
+                </div>
+
+                <!-- Hidden inputs needed for calculations -->
+                <div style="display: none;">
+                    <input type="number" step="0.001" id="whisperCost" value="0.45" onchange="debouncedUpdate()">
+                    <input type="number" step="0.001" id="gpt4Cost" value="0.105" onchange="debouncedUpdate()">
+                    <input type="number" step="0.001" id="firebaseCost" value="0.003" onchange="debouncedUpdate()">
+                    <input type="number" id="totalVariableCost" value="0.558">
+                    <input type="number" step="0.1" id="salariesGrowth" value="0.5" onchange="debouncedUpdate()">
+                    <input type="number" id="salariesThreshold" value="1000" onchange="debouncedUpdate()">
+                    <input type="number" id="office" value="0" onchange="debouncedUpdate()">
+                    <input type="number" step="0.1" id="officeGrowth" value="0.3" onchange="debouncedUpdate()">
+                    <input type="number" id="officeThreshold" value="2000" onchange="debouncedUpdate()">
+                    <input type="number" step="0.1" id="marketingGrowth" value="0.4" onchange="debouncedUpdate()">
+                    <input type="number" id="marketingThreshold" value="1500" onchange="debouncedUpdate()">
+                    <input type="number" step="0.1" id="otherGrowth" value="0.2" onchange="debouncedUpdate()">
+                    <input type="number" id="otherThreshold" value="2500" onchange="debouncedUpdate()">
+                    <input type="number" id="userReach1" value="20" onchange="debouncedUpdate()">
+                    <input type="number" id="successRate1" value="15" onchange="debouncedUpdate()">
+                    <input type="number" id="userReach2" value="10" onchange="debouncedUpdate()">
+                    <input type="number" id="successRate2" value="10" onchange="debouncedUpdate()">
+                    <input type="number" id="customRate" value="30" onchange="debouncedUpdate()">
                 </div>
             </div>
         </div>
-        
-<!-- Summary -->
-        <div class="summary-section">
-            <h3 style="font-size: 20px; margin-bottom: 16px;">Investment Summary (2 Years)</h3>
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <p>Path to Profitability</p>
-                    <p id="profitableMonth">Month 6</p>
+
+        <!-- Step 3: Revenue -->
+        <div class="step-container" id="step3" style="display: none;">
+            <div class="step-header">
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h2 style="margin: 0; font-size: 24px;">How You Make Money</h2>
+                        <p style="margin: 8px 0 0 0; opacity: 0.9;">Now let's set up your revenue streams - the ways customers pay you</p>
+                    </div>
                 </div>
-                <div class="summary-item">
-                    <p>Total Investment Needed</p>
-                    <p id="totalBurn">$150,000</p>
+            </div>
+
+            <div class="step-intro">
+                <p style="margin: 0; color: #374151; line-height: 1.6;">
+                    💰 <strong>Think of revenue like different taps filling a bucket:</strong> You can have multiple ways money flows into your business. Most successful businesses have 2-3 main revenue streams.
+                </p>
+            </div>
+
+            <div class="step-content">
+                <!-- Premium Subscriptions -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1f2937; margin-bottom: 16px;">💳 Premium Subscriptions</h3>
+                    <p style="color: #6b7280; margin-bottom: 16px;">Your main revenue stream - customers paying monthly for premium features.</p>
+
+                    <div style="background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 8px; padding: 20px;">
+                        <div class="simplified-grid" style="grid-template-columns: 1fr 1fr;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Monthly Price</label>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="color: #6b7280;">$</span>
+                                    <input type="number" step="0.01" id="premiumPriceStep" value="3.00" onchange="updatePremiumPrice()" oninput="updatePremiumPrice()"
+                                           style="border: 1px solid #d1d5db; border-radius: 4px; padding: 8px; width: 100px; text-align: center; font-weight: 600;">
+                                    <span style="color: #6b7280; font-size: 14px;">/month</span>
+                                </div>
+                                <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">💡 $3-10 is typical for SME tools</p>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Conversion Rate</label>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="number" id="premiumConversionStep" value="20" onchange="updatePremiumConversion()" oninput="updatePremiumConversion()"
+                                           style="border: 1px solid #d1d5db; border-radius: 4px; padding: 8px; width: 100px; text-align: center; font-weight: 600;">
+                                    <span style="color: #6b7280; font-size: 14px;">% of users pay</span>
+                                </div>
+                                <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">💡 15-25% is typical for freemium</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="summary-item">
-                    <p>Unit Economics (Cost/User)</p>
-                    <p id="unitEconomics">$0.558</p>
+
+                <!-- Loan Matching -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #1f2937; margin-bottom: 16px;">🏦 Loan Matching Revenue</h3>
+                    <p style="color: #6b7280; margin-bottom: 16px;">Earn commissions by connecting your users with loan providers. Two different market approaches:</p>
+
+                    <div style="display: grid; gap: 20px;">
+                        <!-- Microloan Model -->
+                        <div style="background: #e0f2fe; border: 2px solid #0284c7; border-radius: 8px; padding: 16px;">
+                            <h4 style="color: #0369a1; margin: 0 0 12px 0;">🌍 Microloans (Developing Markets)</h4>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-size: 12px; color: #0369a1;">Average Loan Size</label>
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <span style="font-size: 12px;">$</span>
+                                        <input type="number" id="loanSize1Step" value="2000" onchange="updateLoanSize1()" oninput="updateLoanSize1()" style="padding: 4px; width: 80px; text-align: center;">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-size: 12px; color: #0369a1;">Commission %</label>
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <input type="number" step="0.1" id="commission1Step" value="0.5" onchange="updateCommission1()" oninput="updateCommission1()" style="padding: 4px; width: 60px; text-align: center;">
+                                        <span style="font-size: 12px;">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin: 8px 0 0 0; font-size: 11px; color: #0369a1;">Commission per loan: $<span id="commissionPerLoan1">10</span></p>
+                        </div>
+
+                        <!-- SME Model -->
+                        <div style="background: #dcfce7; border: 2px solid #16a34a; border-radius: 8px; padding: 16px;">
+                            <h4 style="color: #14532d; margin: 0 0 12px 0;">🏢 SME Loans (Standard Markets)</h4>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-size: 12px; color: #14532d;">Average Loan Size</label>
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <span style="font-size: 12px;">$</span>
+                                        <input type="number" id="loanSize2" value="5000" onchange="debouncedUpdate()" oninput="debouncedUpdate()" style="padding: 4px; width: 80px; text-align: center;">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; font-size: 12px; color: #14532d;">Commission %</label>
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <input type="number" step="0.1" id="commission2" value="0.5" onchange="debouncedUpdate()" oninput="debouncedUpdate()" style="padding: 4px; width: 60px; text-align: center;">
+                                        <span style="font-size: 12px;">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin: 8px 0 0 0; font-size: 11px; color: #14532d;">Commission per loan: $<span id="commissionPerLoan2">25</span></p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 16px; padding: 16px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                        <p style="margin: 0; color: #92400e; font-size: 14px;">
+                            🎯 <strong>Revenue Potential:</strong> Total monthly loan revenue: $<span id="totalLoanRevenue">0</span> (this grows automatically as you get more users)
+                        </p>
+                    </div>
                 </div>
-                <div class="summary-item">
-                    <p>Year 2 End Users</p>
-                    <p id="finalUsersCount">100,000</p>
+
+                <div style="display: flex; gap: 12px;">
+                    <button style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;" onclick="goToStep(2)">← Back</button>
+                    <button class="next-button" onclick="goToStep(4)">Continue to Step 4: Your Results →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Results -->
+        <div class="step-container" id="step4" style="display: none;">
+            <div class="step-header">
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h2 style="margin: 0; font-size: 24px;">Your 3-Year Financial Picture</h2>
+                        <p style="margin: 8px 0 0 0; opacity: 0.9;">Here's what your business looks like over the next 3 years</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-intro">
+                <p style="margin: 0; color: #374151; line-height: 1.6;">
+                    📊 <strong>This is like your business crystal ball:</strong> Based on your inputs, here's how much money you'll make, spend, and keep over 3 years. These numbers update automatically as you change your settings.
+                </p>
+            </div>
+
+            <div class="step-content">
+                <!-- Executive Summary Cards -->
+                <div class="summary-grid" style="margin-bottom: 30px;">
+                    <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">💰 Total Revenue (3 Years)</div>
+                        <div style="font-size: 28px; font-weight: bold;" id="total3YearRevenue">$2.5M</div>
+                        <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Money coming in from customers</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">👥 Final User Base</div>
+                        <div style="font-size: 28px; font-weight: bold;" id="final3YearUsers">450K</div>
+                        <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Total customers by end of Year 3</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #9333ea, #7c3aed); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">📊 Net Profit (3 Years)</div>
+                        <div style="font-size: 28px; font-weight: bold;" id="total3YearProfit">$850K</div>
+                        <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Money left after all expenses</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">💳 Monthly Revenue (Y3)</div>
+                        <div style="font-size: 28px; font-weight: bold;" id="final3YearMonthlyRevenue">$135K</div>
+                        <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Monthly income by Year 3 end</div>
+                    </div>
+                </div>
+
+                <!-- Quick Metrics -->
+                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                    <h4 style="margin: 0 0 16px 0; color: #1f2937;">📈 Key Milestones</h4>
+                    <div class="simplified-grid">
+                        <div class="simple-card">
+                            <h5 style="margin: 0 0 8px 0; color: #1f2937;">💡 Break-Even Point</h5>
+                            <div style="font-size: 20px; font-weight: bold; color: #059669;" id="profitableMonth">Month 8</div>
+                            <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">When you start making profit</p>
+                        </div>
+                        <div class="simple-card">
+                            <h5 style="margin: 0 0 8px 0; color: #1f2937;">💰 Cash Runway</h5>
+                            <div style="font-size: 20px; font-weight: bold; color: #059669;" id="runway">24+ months</div>
+                            <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">How long your money lasts</p>
+                        </div>
+                        <div class="simple-card">
+                            <h5 style="margin: 0 0 8px 0; color: #1f2937;">📊 Revenue Per User</h5>
+                            <div style="font-size: 20px; font-weight: bold; color: #059669;" id="arpu">$2.40</div>
+                            <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Monthly revenue per customer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                    <button style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;" onclick="goToStep(3)">← Back</button>
+                    <button class="next-button" onclick="goToStep(5)">Continue to Step 5: Conclusion →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Conclusion -->
+        <div class="step-container" id="step5" style="display: none;">
+            <div class="step-header">
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <div class="step-number">5</div>
+                    <div>
+                        <h2 style="margin: 0; font-size: 24px;">Your Action Plan</h2>
+                        <p style="margin: 8px 0 0 0; opacity: 0.9;">What to focus on next to make this plan reality</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-content">
+                <div class="conclusion-box">
+                    <h3 style="margin: 0 0 16px 0; font-size: 24px;">🎉 Congratulations!</h3>
+                    <p style="margin: 0 0 16px 0; font-size: 18px; opacity: 0.9;">You've built a complete 3-year financial plan for your business</p>
+
+                    <div style="background: rgba(255,255,255,0.2); border-radius: 8px; padding: 16px; margin: 20px 0;">
+                        <h4 style="margin: 0 0 12px 0;">📋 Your Plan Summary:</h4>
+                        <ul style="margin: 0; padding-left: 20px; text-align: left;">
+                            <li>Start with <strong id="startingCash">$500,000</strong> in funding</li>
+                            <li>Reach profitability in <strong id="breakEvenTime">Month 8</strong></li>
+                            <li>Generate <strong id="totalRevenue3Y">$2.5M</strong> revenue over 3 years</li>
+                            <li>Build a user base of <strong id="finalUsers3Y">450,000</strong> customers</li>
+                            <li>Create <strong id="totalProfit3Y">$850K</strong> in net profit</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Next Steps -->
+                <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: 20px 0;">
+                    <h4 style="margin: 0 0 16px 0; color: #1f2937;">🚀 Next Steps to Success</h4>
+                    <div style="display: grid; gap: 16px;">
+                        <div style="display: flex; gap: 12px; align-items: start;">
+                            <div style="background: #10b981; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0;">1</div>
+                            <div>
+                                <h5 style="margin: 0 0 4px 0; color: #1f2937;">Validate Your Assumptions</h5>
+                                <p style="margin: 0; color: #6b7280; font-size: 14px;">Test your pricing and conversion rates with real customers. Start small and adjust.</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: start;">
+                            <div style="background: #10b981; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0;">2</div>
+                            <div>
+                                <h5 style="margin: 0 0 4px 0; color: #1f2937;">Focus on Customer Acquisition</h5>
+                                <p style="margin: 0; color: #6b7280; font-size: 14px;">Your growth depends on getting those first 1,000 users. Invest heavily in marketing and product-market fit.</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: start;">
+                            <div style="background: #10b981; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0;">3</div>
+                            <div>
+                                <h5 style="margin: 0 0 4px 0; color: #1f2937;">Monitor Cash Flow Monthly</h5>
+                                <p style="margin: 0; color: #6b7280; font-size: 14px;">Track your actual vs. projected numbers every month. Adjust spending if you're burning cash faster than expected.</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: start;">
+                            <div style="background: #10b981; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0;">4</div>
+                            <div>
+                                <h5 style="margin: 0 0 4px 0; color: #1f2937;">Build Revenue Diversification</h5>
+                                <p style="margin: 0; color: #6b7280; font-size: 14px;">Don't rely on just one revenue stream. Develop both subscription and loan matching revenue early.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="text-align: center; margin-top: 30px;">
+                    <button style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; margin-right: 12px;" onclick="goToStep(4)">← Back to Results</button>
+                    <button class="next-button" onclick="showDetailedView()">View Detailed Financial Breakdown →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final P&L View (shown after Step 5) -->
+        <div id="finalPLView" style="display: none;">
+            <!-- Header -->
+            <div class="header" style="margin-bottom: 24px;">
+                <div style="text-align: center;">
+                    <h1>📊 Your Complete Financial Plan</h1>
+                    <p>3-Year Monthly P&L Breakdown - Ready for Action</p>
+                </div>
+            </div>
+
+            <!-- Executive Summary Cards -->
+            <div class="summary-grid" style="margin-bottom: 30px;">
+                <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">💰 Total Revenue (3 Years)</div>
+                    <div style="font-size: 28px; font-weight: bold;" id="total3YearRevenueFinal">$2.5M</div>
+                    <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Money coming in from customers</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">👥 Final User Base</div>
+                    <div style="font-size: 28px; font-weight: bold;" id="final3YearUsersFinal">450K</div>
+                    <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Total customers by end of Year 3</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #9333ea, #7c3aed); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">📊 Net Profit (3 Years)</div>
+                    <div style="font-size: 28px; font-weight: bold;" id="total3YearProfitFinal">$850K</div>
+                    <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Money left after all expenses</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">💳 Monthly Revenue (Y3)</div>
+                    <div style="font-size: 28px; font-weight: bold;" id="final3YearMonthlyRevenueFinal">$135K</div>
+                    <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Monthly income by Year 3 end</div>
+                </div>
+            </div>
+
+            <!-- Download Section -->
+            <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 24px; text-align: center;">
+                <h3 style="margin: 0 0 16px 0; color: #1f2937;">📁 Save Your Plan</h3>
+                <p style="margin: 0 0 20px 0; color: #6b7280;">Download your complete financial plan as an Excel spreadsheet with all details included.</p>
+                <button onclick="downloadExcel()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 16px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-right: 12px;">
+                    📥 Download Excel File
+                </button>
+                <button onclick="goBackToSteps()" style="background: #6b7280; color: white; border: none; padding: 16px 32px; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                    ← Back to Steps
+                </button>
+            </div>
+
+            <!-- Monthly P&L Breakdown -->
+            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <div style="background: linear-gradient(to right, #1f2937, #374151); color: white; padding: 20px; text-align: center;">
+                    <h3 style="margin: 0; font-size: 24px;">📅 36-Month P&L Breakdown</h3>
+                    <p style="margin: 8px 0 0 0; opacity: 0.9;">Complete month-by-month financial performance</p>
+                </div>
+
+                <div class="table-container" style="overflow-x: auto; max-height: 70vh; overflow-y: auto;">
+                    <table id="finalPLTable" style="width: 100%; border-collapse: collapse;">
+                        <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 10;">
+                            <tr>
+                                <th style="text-align: left; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Month</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Users</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Revenue</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Variable Costs</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Fixed Costs</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Total Costs</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Gross Profit</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Net Profit</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Cash Position</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">ARPU</th>
+                            </tr>
+                        </thead>
+                        <tbody id="finalPLTableBody">
+                            <!-- Detailed P&L rows will be inserted here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- CAC Info Modal -->
     <div id="cacModal" class="modal-overlay" onclick="closeCACModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
@@ -1566,9 +1772,18 @@
                 return;
             }
             
-            // Get all inputs with validation
+            // Get all inputs with validation - prioritize step inputs
             const customRate = validateInput(document.getElementById('customRate'), 1, 200);
+
+            // Read funding from step input first, then hidden input
+            const initialFundingStep = document.getElementById('initialFundingStep')?.value;
+            const initialFundingHidden = document.getElementById('initialFunding')?.value;
+            const initialFundingValue = initialFundingStep || initialFundingHidden || '500000';
+
+            // Ensure the hidden input has the correct value before validation
+            document.getElementById('initialFunding').value = initialFundingValue;
             const initialFunding = validateInput(document.getElementById('initialFunding'), 0, 10000000);
+            console.log('updateModel - Step funding:', initialFundingStep, 'Hidden:', initialFundingHidden, 'Using:', initialFunding);
             
             const whisperCost = validateInput(document.getElementById('whisperCost'), 0, 10);
             const gpt4Cost = validateInput(document.getElementById('gpt4Cost'), 0, 10);
@@ -1616,8 +1831,8 @@
             document.getElementById('currentGrowthRate').textContent = currentRate;
             growthRates.custom = customRate;
             
-            // Calculate projections for 24 months
-            const months = 24;
+            // Calculate projections for 36 months (3 years)
+            const months = 36;
             const targetYear1Users = 50000;
             const growthRate = growthRates[currentScenario] / 100;
             const startingUsers = targetYear1Users / Math.pow(1 + growthRate, 11);
@@ -1696,13 +1911,21 @@
             document.body.style.cursor = 'default';
         }
         
-        // Optimized table update function
+        // Optimized table update function for 36 months
         function updateTableIfChanged(projections, year1Revenue, year1Costs, year1Profit, year2Revenue, year2Costs, year2Profit, lastMonth) {
             try {
-                const tableData = JSON.stringify({projections, year1Revenue, year1Costs, year1Profit, year2Revenue, year2Costs, year2Profit});
+                // Calculate year 3 totals
+                let year3Revenue = 0, year3Costs = 0, year3Profit = 0;
+                projections.slice(24, 36).forEach(proj => {
+                    year3Revenue += proj.revenue;
+                    year3Costs += proj.costs;
+                    year3Profit += proj.profit;
+                });
+
+                const tableData = JSON.stringify({projections, year1Revenue, year1Costs, year1Profit, year2Revenue, year2Costs, year2Profit, year3Revenue, year3Costs, year3Profit});
                 if (tableData === lastTableData) return;
                 lastTableData = tableData;
-                
+
                 // Update table
                 const tbody = document.getElementById('projectionsTable');
                 if (!tbody) {
@@ -1710,8 +1933,9 @@
                     return;
                 }
                 tbody.innerHTML = '';
-            
+
             projections.forEach((proj, index) => {
+                // Year 1 Summary
                 if (index === 12) {
                     const summaryRow = tbody.insertRow();
                     summaryRow.style.background = '#fbbf24';
@@ -1727,7 +1951,7 @@
                         <td>-</td>
                         <td>-</td>
                     `;
-                    
+
                     const separatorRow = tbody.insertRow();
                     separatorRow.innerHTML = `
                         <td colspan="7" style="background: linear-gradient(to right, #3b82f6, #8b5cf6); color: white; text-align: center; font-weight: bold; padding: 10px;">
@@ -1735,14 +1959,47 @@
                         </td>
                     `;
                 }
-                
+
+                // Year 2 Summary
+                if (index === 24) {
+                    const year2SummaryRow = tbody.insertRow();
+                    year2SummaryRow.style.background = '#fbbf24';
+                    year2SummaryRow.style.fontWeight = 'bold';
+                    year2SummaryRow.innerHTML = `
+                        <td>YEAR 2 TOTAL</td>
+                        <td>-</td>
+                        <td>${formatCurrency(year2Revenue)}</td>
+                        <td>${formatCurrency(year2Costs)}</td>
+                        <td class="${year2Profit >= 0 ? 'text-green' : 'text-red'}">
+                            ${formatCurrency(year2Profit)}
+                        </td>
+                        <td>-</td>
+                        <td>-</td>
+                    `;
+
+                    const separatorRow = tbody.insertRow();
+                    separatorRow.innerHTML = `
+                        <td colspan="7" style="background: linear-gradient(to right, #9333ea, #7c3aed); color: white; text-align: center; font-weight: bold; padding: 10px;">
+                            ═══════ YEAR 3 ═══════
+                        </td>
+                    `;
+                }
+
                 const row = tbody.insertRow();
-                const isYear2 = index >= 12;
-                row.style.background = isYear2 ? (index % 2 === 0 ? '#f0f9ff' : '#e0f2fe') : '';
-                
+                const isYear2 = index >= 12 && index < 24;
+                const isYear3 = index >= 24;
+
+                if (isYear3) {
+                    row.style.background = index % 2 === 0 ? '#f3e8ff' : '#e9d5ff';
+                } else if (isYear2) {
+                    row.style.background = index % 2 === 0 ? '#f0f9ff' : '#e0f2fe';
+                } else {
+                    row.style.background = index % 2 === 0 ? '#f9fafb' : '#f3f4f6';
+                }
+
                 row.innerHTML = `
-                    <td style="font-weight: ${index === 11 || index === 23 ? 'bold' : 'normal'}">
-                        Month ${proj.month} ${index === 11 ? '(Y1 End)' : index === 23 ? '(Y2 End)' : ''}
+                    <td style="font-weight: ${index === 11 || index === 23 || index === 35 ? 'bold' : 'normal'}">
+                        Month ${proj.month} ${index === 11 ? '(Y1 End)' : index === 23 ? '(Y2 End)' : index === 35 ? '(Y3 End)' : ''}
                     </td>
                     <td>${proj.users.toLocaleString()}</td>
                     <td>${formatCurrency(proj.revenue)}</td>
@@ -1754,31 +2011,33 @@
                     <td>${formatCurrency(proj.arpu)}</td>
                 `;
             });
-            
-            const year2SummaryRow = tbody.insertRow();
-            year2SummaryRow.style.background = '#fbbf24';
-            year2SummaryRow.style.fontWeight = 'bold';
-            year2SummaryRow.innerHTML = `
-                <td>YEAR 2 TOTAL</td>
+
+            // Year 3 Summary
+            const year3SummaryRow = tbody.insertRow();
+            year3SummaryRow.style.background = '#fbbf24';
+            year3SummaryRow.style.fontWeight = 'bold';
+            year3SummaryRow.innerHTML = `
+                <td>YEAR 3 TOTAL</td>
                 <td>-</td>
-                <td>${formatCurrency(year2Revenue)}</td>
-                <td>${formatCurrency(year2Costs)}</td>
-                <td class="${year2Profit >= 0 ? 'text-green' : 'text-red'}">
-                    ${formatCurrency(year2Profit)}
+                <td>${formatCurrency(year3Revenue)}</td>
+                <td>${formatCurrency(year3Costs)}</td>
+                <td class="${year3Profit >= 0 ? 'text-green' : 'text-red'}">
+                    ${formatCurrency(year3Profit)}
                 </td>
                 <td>-</td>
                 <td>-</td>
             `;
-            
+
+            // Grand Total
             const grandTotalRow = tbody.insertRow();
             grandTotalRow.style.background = 'linear-gradient(to right, #10b981, #059669)';
             grandTotalRow.style.color = 'white';
             grandTotalRow.style.fontWeight = 'bold';
-            const totalRevenue = year1Revenue + year2Revenue;
-            const totalCosts = year1Costs + year2Costs;
-            const totalProfit = year1Profit + year2Profit;
+            const totalRevenue = year1Revenue + year2Revenue + year3Revenue;
+            const totalCosts = year1Costs + year2Costs + year3Costs;
+            const totalProfit = year1Profit + year2Profit + year3Profit;
             grandTotalRow.innerHTML = `
-                <td>2-YEAR TOTAL</td>
+                <td>3-YEAR TOTAL</td>
                 <td>${lastMonth.users.toLocaleString()} users</td>
                 <td>${formatCurrency(totalRevenue)}</td>
                 <td>${formatCurrency(totalCosts)}</td>
@@ -1840,11 +2099,707 @@
             
             // Use optimized table update
             updateTableIfChanged(projections, year1Revenue, year1Costs, year1Profit, year2Revenue, year2Costs, year2Profit, lastMonth);
+
+            // Update 3-year summary
+            update3YearSummary(projections);
+
+            // Update step summary for conclusion
+            updateStepSummary();
+
+            // Update final P&L view
+            updateFinalPLView(projections);
+        }
+
+        // New function to update 3-year financial summary
+        function update3YearSummary(projections) {
+            // Calculate yearly totals
+            let year1Revenue = 0, year1Costs = 0, year1Profit = 0;
+            let year2Revenue = 0, year2Costs = 0, year2Profit = 0;
+            let year3Revenue = 0, year3Costs = 0, year3Profit = 0;
+
+            projections.forEach((proj, index) => {
+                if (index < 12) {
+                    year1Revenue += proj.revenue;
+                    year1Costs += proj.costs;
+                    year1Profit += proj.profit;
+                } else if (index < 24) {
+                    year2Revenue += proj.revenue;
+                    year2Costs += proj.costs;
+                    year2Profit += proj.profit;
+                } else {
+                    year3Revenue += proj.revenue;
+                    year3Costs += proj.costs;
+                    year3Profit += proj.profit;
+                }
+            });
+
+            const year1Users = projections[11].users;
+            const year2Users = projections[23].users;
+            const year3Users = projections[35].users;
+
+            const total3YearRevenue = year1Revenue + year2Revenue + year3Revenue;
+            const total3YearProfit = year1Profit + year2Profit + year3Profit;
+
+            // Update executive summary cards
+            document.getElementById('total3YearRevenue').textContent = formatCurrency(total3YearRevenue);
+            document.getElementById('final3YearUsers').textContent = year3Users.toLocaleString();
+            document.getElementById('total3YearProfit').textContent = formatCurrency(total3YearProfit);
+            document.getElementById('final3YearMonthlyRevenue').textContent = formatCurrency(projections[35].revenue);
+
+            // Update growth metrics
+            const revenueGrowthY2 = year1Revenue > 0 ? ((year2Revenue - year1Revenue) / year1Revenue * 100).toFixed(0) : 0;
+            const revenueGrowthY3 = year2Revenue > 0 ? ((year3Revenue - year2Revenue) / year2Revenue * 100).toFixed(0) : 0;
+            const userGrowthY2 = ((year2Users - year1Users) / year1Users * 100).toFixed(0);
+            const userGrowthY3 = ((year3Users - year2Users) / year2Users * 100).toFixed(0);
+
+            const profitMarginY1 = year1Revenue > 0 ? (year1Profit / year1Revenue * 100).toFixed(0) : 0;
+            const profitMarginY3 = year3Revenue > 0 ? (year3Profit / year3Revenue * 100).toFixed(0) : 0;
+
+            document.getElementById('revenueGrowthY2').textContent = `+${revenueGrowthY2}%`;
+            document.getElementById('revenueGrowthY3').textContent = `+${revenueGrowthY3}%`;
+            document.getElementById('userGrowthY2').textContent = `+${userGrowthY2}%`;
+            document.getElementById('userGrowthY3').textContent = `+${userGrowthY3}%`;
+            document.getElementById('profitMarginY1').textContent = `${profitMarginY1}%`;
+            document.getElementById('profitMarginY3').textContent = `${profitMarginY3}%`;
+
+            // Update P&L Statement
+            updatePLStatement(year1Revenue, year1Costs, year1Profit, year2Revenue, year2Costs, year2Profit, year3Revenue, year3Costs, year3Profit, projections);
+
+            // Update transaction grid
+            updateTransactionGrid(year1Users, year2Users, year3Users, projections);
+        }
+
+        // Function to update P&L Statement table
+        function updatePLStatement(y1Rev, y1Costs, y1Profit, y2Rev, y2Costs, y2Profit, y3Rev, y3Costs, y3Profit, projections) {
+            const tbody = document.getElementById('plStatementTable');
+            if (!tbody) return;
+
+            // Calculate detailed breakdown
+            const variableCostPerUser = parseFloat(document.getElementById('totalVariableCost').value) || 0.558;
+
+            const y1VariableCosts = projections.slice(0, 12).reduce((sum, proj) => sum + (proj.users * variableCostPerUser), 0);
+            const y2VariableCosts = projections.slice(12, 24).reduce((sum, proj) => sum + (proj.users * variableCostPerUser), 0);
+            const y3VariableCosts = projections.slice(24, 36).reduce((sum, proj) => sum + (proj.users * variableCostPerUser), 0);
+
+            const y1FixedCosts = y1Costs - y1VariableCosts;
+            const y2FixedCosts = y2Costs - y2VariableCosts;
+            const y3FixedCosts = y3Costs - y3VariableCosts;
+
+            const y1GrossProfit = y1Rev - y1VariableCosts;
+            const y2GrossProfit = y2Rev - y2VariableCosts;
+            const y3GrossProfit = y3Rev - y3VariableCosts;
+
+            const y1GrossMargin = y1Rev > 0 ? (y1GrossProfit / y1Rev * 100).toFixed(1) : 0;
+            const y2GrossMargin = y2Rev > 0 ? (y2GrossProfit / y2Rev * 100).toFixed(1) : 0;
+            const y3GrossMargin = y3Rev > 0 ? (y3GrossProfit / y3Rev * 100).toFixed(1) : 0;
+
+            tbody.innerHTML = `
+                <tr style="background: #f0fdf4;">
+                    <td style="padding: 12px; font-weight: 600; color: #15803d;">💰 Total Revenue</td>
+                    <td style="padding: 12px; text-align: right; font-weight: 600; color: #15803d;">${formatCurrency(y1Rev)}</td>
+                    <td style="padding: 12px; text-align: right; font-weight: 600; color: #15803d;">${formatCurrency(y2Rev)}</td>
+                    <td style="padding: 12px; text-align: right; font-weight: 600; color: #15803d;">${formatCurrency(y3Rev)}</td>
+                    <td style="padding: 12px; color: #6b7280; font-size: 12px;">Money from subscriptions + loans</td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; color: #dc2626; padding-left: 24px;">📱 Variable Costs (COGS)</td>
+                    <td style="padding: 12px; text-align: right; color: #dc2626;">${formatCurrency(y1VariableCosts)}</td>
+                    <td style="padding: 12px; text-align: right; color: #dc2626;">${formatCurrency(y2VariableCosts)}</td>
+                    <td style="padding: 12px; text-align: right; color: #dc2626;">${formatCurrency(y3VariableCosts)}</td>
+                    <td style="padding: 12px; color: #6b7280; font-size: 12px;">API costs that grow with users</td>
+                </tr>
+                <tr style="background: #eff6ff; border-top: 1px solid #e5e7eb;">
+                    <td style="padding: 12px; font-weight: 600; color: #1d4ed8;">📊 Gross Profit</td>
+                    <td style="padding: 12px; text-align: right; font-weight: 600; color: #1d4ed8;">${formatCurrency(y1GrossProfit)}</td>
+                    <td style="padding: 12px; text-align: right; font-weight: 600; color: #1d4ed8;">${formatCurrency(y2GrossProfit)}</td>
+                    <td style="padding: 12px; text-align: right; font-weight: 600; color: #1d4ed8;">${formatCurrency(y3GrossProfit)}</td>
+                    <td style="padding: 12px; color: #6b7280; font-size: 12px;">Revenue minus direct costs</td>
+                </tr>
+                <tr style="background: #eff6ff;">
+                    <td style="padding: 12px; color: #6b7280; padding-left: 24px; font-style: italic;">Gross Margin %</td>
+                    <td style="padding: 12px; text-align: right; color: #6b7280; font-style: italic;">${y1GrossMargin}%</td>
+                    <td style="padding: 12px; text-align: right; color: #6b7280; font-style: italic;">${y2GrossMargin}%</td>
+                    <td style="padding: 12px; text-align: right; color: #6b7280; font-style: italic;">${y3GrossMargin}%</td>
+                    <td style="padding: 12px; color: #6b7280; font-size: 12px;">% of revenue after direct costs</td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; color: #dc2626; padding-left: 24px;">🏢 Operating Expenses</td>
+                    <td style="padding: 12px; text-align: right; color: #dc2626;">${formatCurrency(y1FixedCosts)}</td>
+                    <td style="padding: 12px; text-align: right; color: #dc2626;">${formatCurrency(y2FixedCosts)}</td>
+                    <td style="padding: 12px; text-align: right; color: #dc2626;">${formatCurrency(y3FixedCosts)}</td>
+                    <td style="padding: 12px; color: #6b7280; font-size: 12px;">Salaries, marketing, office, etc.</td>
+                </tr>
+                <tr style="background: #fef3c7; border-top: 2px solid #f59e0b;">
+                    <td style="padding: 12px; font-weight: bold; color: #92400e;">🎯 Net Income (Profit/Loss)</td>
+                    <td style="padding: 12px; text-align: right; font-weight: bold; color: ${y1Profit >= 0 ? '#15803d' : '#dc2626'};">${formatCurrency(y1Profit)}</td>
+                    <td style="padding: 12px; text-align: right; font-weight: bold; color: ${y2Profit >= 0 ? '#15803d' : '#dc2626'};">${formatCurrency(y2Profit)}</td>
+                    <td style="padding: 12px; text-align: right; font-weight: bold; color: ${y3Profit >= 0 ? '#15803d' : '#dc2626'};">${formatCurrency(y3Profit)}</td>
+                    <td style="padding: 12px; color: #6b7280; font-size: 12px;">Final profit after all expenses</td>
+                </tr>
+            `;
+        }
+
+        // Function to update transaction grid
+        function updateTransactionGrid(y1Users, y2Users, y3Users, projections) {
+            const grid = document.getElementById('transactionGrid');
+            if (!grid) return;
+
+            // Calculate transaction metrics
+            const premiumConversion = parseFloat(document.getElementById('premiumConversion').value) || 20;
+            const premiumPrice = parseFloat(document.getElementById('premiumPrice').value) || 3.00;
+
+            const y1PremiumUsers = Math.round(y1Users * (premiumConversion / 100));
+            const y2PremiumUsers = Math.round(y2Users * (premiumConversion / 100));
+            const y3PremiumUsers = Math.round(y3Users * (premiumConversion / 100));
+
+            const y1PremiumRevenue = y1PremiumUsers * premiumPrice * 12;
+            const y2PremiumRevenue = y2PremiumUsers * premiumPrice * 12;
+            const y3PremiumRevenue = y3PremiumUsers * premiumPrice * 12;
+
+            // Calculate loan transactions
+            const loanSize1 = parseFloat(document.getElementById('loanSize1').value) || 2000;
+            const commission1 = parseFloat(document.getElementById('commission1').value) || 0.5;
+            const userReach1 = parseFloat(document.getElementById('userReach1').value) || 20;
+            const successRate1 = parseFloat(document.getElementById('successRate1').value) || 15;
+
+            const y1Loans = Math.round(y1Users * (userReach1/100) * (successRate1/100) * 0.1 * 12);
+            const y2Loans = Math.round(y2Users * (userReach1/100) * (successRate1/100) * 0.1 * 12);
+            const y3Loans = Math.round(y3Users * (userReach1/100) * (successRate1/100) * 0.1 * 12);
+
+            const loanCommission = loanSize1 * (commission1 / 100);
+
+            grid.innerHTML = `
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; text-align: center;">
+                    <div style="color: #15803d; font-weight: 600; font-size: 14px; margin-bottom: 8px;">💳 Premium Subscribers</div>
+                    <div style="font-size: 20px; font-weight: bold; color: #166534; margin-bottom: 4px;">Y3: ${y3PremiumUsers.toLocaleString()}</div>
+                    <div style="font-size: 12px; color: #16a34a;">Annual Revenue: ${formatCurrency(y3PremiumRevenue)}</div>
+                    <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">Y1: ${y1PremiumUsers.toLocaleString()} | Y2: ${y2PremiumUsers.toLocaleString()}</div>
+                </div>
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; text-align: center;">
+                    <div style="color: #1d4ed8; font-weight: 600; font-size: 14px; margin-bottom: 8px;">🏦 Loan Transactions</div>
+                    <div style="font-size: 20px; font-weight: bold; color: #1e40af; margin-bottom: 4px;">Y3: ${y3Loans}</div>
+                    <div style="font-size: 12px; color: #2563eb;">Avg Commission: ${formatCurrency(loanCommission)}</div>
+                    <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">Y1: ${y1Loans} | Y2: ${y2Loans}</div>
+                </div>
+                <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 16px; text-align: center;">
+                    <div style="color: #b45309; font-weight: 600; font-size: 14px; margin-bottom: 8px;">📊 Monthly Active Users</div>
+                    <div style="font-size: 20px; font-weight: bold; color: #92400e; margin-bottom: 4px;">${y3Users.toLocaleString()}</div>
+                    <div style="font-size: 12px; color: #d97706;">Total by Year 3</div>
+                    <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">Y1: ${y1Users.toLocaleString()} | Y2: ${y2Users.toLocaleString()}</div>
+                </div>
+                <div style="background: #f3e8ff; border: 1px solid #d8b4fe; border-radius: 8px; padding: 16px; text-align: center;">
+                    <div style="color: #7c3aed; font-weight: 600; font-size: 14px; margin-bottom: 8px;">💵 Revenue Per User</div>
+                    <div style="font-size: 20px; font-weight: bold; color: #6b21a8; margin-bottom: 4px;">${formatCurrency(projections[35].arpu)}</div>
+                    <div style="font-size: 12px; color: #8b5cf6;">Monthly ARPU (Year 3)</div>
+                    <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">Y1: ${formatCurrency(projections[11].arpu)} | Y2: ${formatCurrency(projections[23].arpu)}</div>
+                </div>
+            `;
         }
         
+        // Step navigation functions
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        function goToStep(stepNumber) {
+            // Hide all steps
+            for (let i = 1; i <= totalSteps; i++) {
+                const step = document.getElementById(`step${i}`);
+                if (step) step.style.display = 'none';
+            }
+
+            // Show target step
+            const targetStep = document.getElementById(`step${stepNumber}`);
+            if (targetStep) {
+                targetStep.style.display = 'block';
+                currentStep = stepNumber;
+
+                // Update progress
+                updateProgress();
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                // Update model when moving between steps
+                if (stepNumber >= 4) {
+                    // Force sync all step inputs before calculating results
+                    syncAllStepInputs();
+                    // Force immediate update for result steps
+                    updateModel();
+                }
+                setTimeout(() => {
+                    updateModel();
+                }, 100);
+            }
+        }
+
+        function updateProgress() {
+            const progressPercent = (currentStep / totalSteps) * 100;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            if (progressFill) progressFill.style.width = `${progressPercent}%`;
+            if (progressText) progressText.textContent = `Step ${currentStep} of ${totalSteps}`;
+        }
+
+        function selectGrowth(scenario) {
+            // Remove active class from all cards
+            document.querySelectorAll('.simple-card[data-scenario]').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            // Add active class to selected card
+            const selectedCard = document.querySelector(`[data-scenario="${scenario}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+            }
+
+            // Update the scenario and trigger calculations
+            setScenario(scenario);
+
+            // Force update the model immediately
+            updateModel();
+        }
+
+        function showDetailedView() {
+            // Hide all steps
+            for (let i = 1; i <= totalSteps; i++) {
+                const step = document.getElementById(`step${i}`);
+                if (step) step.style.display = 'none';
+            }
+
+            // Hide progress bar
+            const progressContainer = document.querySelector('.progress-bar').parentElement;
+            if (progressContainer) progressContainer.style.display = 'none';
+
+            // Show final P&L view
+            const finalView = document.getElementById('finalPLView');
+            if (finalView) {
+                finalView.style.display = 'block';
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Update model
+            setTimeout(() => {
+                updateModel();
+            }, 100);
+        }
+
+        function updateStepSummary() {
+            try {
+                // Update conclusion step summary values - READ FROM STEP INPUT FIRST
+                const initialFundingStep = document.getElementById('initialFundingStep')?.value;
+                const initialFundingHidden = document.getElementById('initialFunding')?.value;
+                const initialFunding = initialFundingStep || initialFundingHidden || '500000';
+
+                console.log('Step funding:', initialFundingStep, 'Hidden funding:', initialFundingHidden, 'Using:', initialFunding);
+                const totalRevenue = document.getElementById('total3YearRevenue')?.textContent || '$0';
+                const totalProfit = document.getElementById('total3YearProfit')?.textContent || '$0';
+                const finalUsers = document.getElementById('final3YearUsers')?.textContent || '0';
+                const profitableMonth = document.getElementById('profitableMonth')?.textContent || 'Month 8';
+
+                // Update summary in step 5
+                const startingCash = document.getElementById('startingCash');
+                const totalRevenue3Y = document.getElementById('totalRevenue3Y');
+                const totalProfit3Y = document.getElementById('totalProfit3Y');
+                const finalUsers3Y = document.getElementById('finalUsers3Y');
+                const breakEvenTime = document.getElementById('breakEvenTime');
+
+                if (startingCash) startingCash.textContent = formatCurrency(parseFloat(initialFunding));
+                if (totalRevenue3Y) totalRevenue3Y.textContent = totalRevenue;
+                if (totalProfit3Y) totalProfit3Y.textContent = totalProfit;
+                if (finalUsers3Y) finalUsers3Y.textContent = finalUsers;
+                if (breakEvenTime) breakEvenTime.textContent = profitableMonth;
+
+                // Also update the step 4 metrics
+                const arpuElement = document.getElementById('arpu');
+                const runwayElement = document.getElementById('runway');
+
+                if (cachedProjections && cachedProjections.projections && cachedProjections.projections.length > 0) {
+                    const lastMonth = cachedProjections.projections[cachedProjections.projections.length - 1];
+                    if (arpuElement) arpuElement.textContent = formatCurrency(lastMonth.arpu);
+
+                    if (runwayElement) {
+                        const runway = cachedProjections.totalBurn ?
+                            Math.floor(parseFloat(initialFunding) / cachedProjections.totalBurn) :
+                            '24+';
+                        runwayElement.textContent = runway + ' months';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating step summary:', error);
+            }
+        }
+
+        // Function to update final P&L view
+        function updateFinalPLView(projections) {
+            // Update final view summary cards
+            const totalRevenue = document.getElementById('total3YearRevenue').textContent;
+            const totalProfit = document.getElementById('total3YearProfit').textContent;
+            const finalUsers = document.getElementById('final3YearUsers').textContent;
+            const finalMonthlyRevenue = document.getElementById('final3YearMonthlyRevenue').textContent;
+
+            const finalCards = {
+                'total3YearRevenueFinal': totalRevenue,
+                'total3YearProfitFinal': totalProfit,
+                'final3YearUsersFinal': finalUsers,
+                'final3YearMonthlyRevenueFinal': finalMonthlyRevenue
+            };
+
+            Object.entries(finalCards).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
+
+            // Update detailed P&L table
+            updateFinalPLTable(projections);
+        }
+
+        // Function to update final P&L table with detailed breakdown
+        function updateFinalPLTable(projections) {
+            const tbody = document.getElementById('finalPLTableBody');
+            if (!tbody) return;
+
+            const variableCostPerUser = parseFloat(document.getElementById('totalVariableCost').value) || 0.558;
+            let html = '';
+
+            projections.forEach((proj, index) => {
+                const variableCosts = proj.users * variableCostPerUser;
+                const fixedCosts = proj.costs - variableCosts;
+                const grossProfit = proj.revenue - variableCosts;
+
+                // Determine row styling
+                let rowClass = '';
+                let isYearEnd = false;
+
+                if (index === 11 || index === 23 || index === 35) {
+                    isYearEnd = true;
+                    rowClass = 'font-weight: bold; background: #fef3c7;';
+                } else if (index >= 24) {
+                    rowClass = 'background: #f3e8ff;';
+                } else if (index >= 12) {
+                    rowClass = 'background: #f0f9ff;';
+                } else {
+                    rowClass = 'background: #f9fafb;';
+                }
+
+                html += `
+                    <tr style="${rowClass}">
+                        <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; ${isYearEnd ? 'font-weight: bold;' : ''}">
+                            Month ${proj.month} ${index === 11 ? '(Y1 End)' : index === 23 ? '(Y2 End)' : index === 35 ? '(Y3 End)' : ''}
+                        </td>
+                        <td style="padding: 10px; text-align: right; border-bottom: 1px solid #e5e7eb;">${proj.users.toLocaleString()}</td>
+                        <td style="padding: 10px; text-align: right; border-bottom: 1px solid #e5e7eb;">${formatCurrency(proj.revenue)}</td>
+                        <td style="padding: 10px; text-align: right; border-bottom: 1px solid #e5e7eb;">${formatCurrency(variableCosts)}</td>
+                        <td style="padding: 10px; text-align: right; border-bottom: 1px solid #e5e7eb;">${formatCurrency(fixedCosts)}</td>
+                        <td style="padding: 10px; text-align: right; border-bottom: 1px solid #e5e7eb;">${formatCurrency(proj.costs)}</td>
+                        <td style="padding: 10px; text-align: right; border-bottom: 1px solid #e5e7eb; color: ${grossProfit >= 0 ? '#059669' : '#dc2626'};">${formatCurrency(grossProfit)}</td>
+                        <td style="padding: 10px; text-align: right; border-bottom: 1px solid #e5e7eb; color: ${proj.profit >= 0 ? '#059669' : '#dc2626'}; ${isYearEnd ? 'font-weight: bold;' : ''}">${formatCurrency(proj.profit)}</td>
+                        <td style="padding: 10px; text-align: right; border-bottom: 1px solid #e5e7eb;">${formatCurrency(proj.cashPosition)}</td>
+                        <td style="padding: 10px; text-align: right; border-bottom: 1px solid #e5e7eb;">${formatCurrency(proj.arpu)}</td>
+                    </tr>
+                `;
+
+                // Add year summary rows
+                if (index === 11) {
+                    html += `
+                        <tr style="background: linear-gradient(to right, #3b82f6, #8b5cf6); color: white;">
+                            <td colspan="10" style="padding: 12px; text-align: center; font-weight: bold; border-bottom: 2px solid #e5e7eb;">
+                                ═══════ YEAR 2 BEGINS ═══════
+                            </td>
+                        </tr>
+                    `;
+                } else if (index === 23) {
+                    html += `
+                        <tr style="background: linear-gradient(to right, #9333ea, #7c3aed); color: white;">
+                            <td colspan="10" style="padding: 12px; text-align: center; font-weight: bold; border-bottom: 2px solid #e5e7eb;">
+                                ═══════ YEAR 3 BEGINS ═══════
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        // Function to go back to steps
+        function goBackToSteps() {
+            // Hide final view
+            const finalView = document.getElementById('finalPLView');
+            if (finalView) finalView.style.display = 'none';
+
+            // Show progress bar
+            const progressContainer = document.querySelector('.progress-bar').parentElement;
+            if (progressContainer) progressContainer.style.display = 'block';
+
+            // Go to step 5
+            goToStep(5);
+        }
+
+        // Excel download functionality
+        function downloadExcel() {
+            try {
+                // Get current projections data
+                const projections = cachedProjections?.projections || [];
+                if (projections.length === 0) {
+                    alert('No data available for download. Please wait for calculations to complete.');
+                    return;
+                }
+
+                // Create workbook data
+                const workbookData = createExcelData(projections);
+
+                // Convert to CSV format (simple Excel alternative)
+                const csvContent = convertToCSV(workbookData);
+
+                // Create and download file
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+
+                const filename = `Nota_Financial_Plan_${new Date().toISOString().split('T')[0]}.csv`;
+
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', filename);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    alert('Your browser does not support automatic downloads. Please update your browser.');
+                }
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('There was an error generating the download. Please try again.');
+            }
+        }
+
+        // Function to create structured Excel data
+        function createExcelData(projections) {
+            const data = [];
+            const variableCostPerUser = parseFloat(document.getElementById('totalVariableCost').value) || 0.558;
+
+            // Header information
+            data.push(['NOTA FINANCIAL PLAN - 3 YEAR PROJECTION']);
+            data.push(['Generated on:', new Date().toLocaleDateString()]);
+            data.push(['']);
+
+            // Business assumptions
+            data.push(['BUSINESS ASSUMPTIONS']);
+            data.push(['Initial Funding:', formatCurrency(parseFloat(document.getElementById('initialFunding').value))]);
+            data.push(['Growth Rate:', document.getElementById('currentGrowthRate').textContent + '%/month']);
+            data.push(['Premium Price:', formatCurrency(parseFloat(document.getElementById('premiumPrice').value))]);
+            data.push(['Premium Conversion:', document.getElementById('premiumConversion').value + '%']);
+            data.push(['Variable Cost per User:', formatCurrency(variableCostPerUser)]);
+            data.push(['']);
+
+            // Summary metrics
+            data.push(['SUMMARY METRICS']);
+            data.push(['Total 3-Year Revenue:', document.getElementById('total3YearRevenue').textContent]);
+            data.push(['Total 3-Year Profit:', document.getElementById('total3YearProfit').textContent]);
+            data.push(['Final User Base:', document.getElementById('final3YearUsers').textContent]);
+            data.push(['Break-even Month:', document.getElementById('profitableMonth').textContent]);
+            data.push(['']);
+
+            // Monthly breakdown header
+            data.push(['MONTHLY P&L BREAKDOWN']);
+            data.push(['Month', 'Users', 'Revenue', 'Variable Costs', 'Fixed Costs', 'Total Costs', 'Gross Profit', 'Net Profit', 'Cash Position', 'ARPU']);
+
+            // Monthly data
+            projections.forEach((proj, index) => {
+                const variableCosts = proj.users * variableCostPerUser;
+                const fixedCosts = proj.costs - variableCosts;
+                const grossProfit = proj.revenue - variableCosts;
+
+                data.push([
+                    `Month ${proj.month}${index === 11 ? ' (Y1 End)' : index === 23 ? ' (Y2 End)' : index === 35 ? ' (Y3 End)' : ''}`,
+                    proj.users,
+                    proj.revenue,
+                    variableCosts,
+                    fixedCosts,
+                    proj.costs,
+                    grossProfit,
+                    proj.profit,
+                    proj.cashPosition,
+                    proj.arpu
+                ]);
+
+                // Add year separators
+                if (index === 11) {
+                    data.push(['=== YEAR 2 BEGINS ===']);
+                } else if (index === 23) {
+                    data.push(['=== YEAR 3 BEGINS ===']);
+                }
+            });
+
+            return data;
+        }
+
+        // Function to convert data to CSV
+        function convertToCSV(data) {
+            return data.map(row => {
+                return row.map(cell => {
+                    // Handle numbers and currency
+                    if (typeof cell === 'number') {
+                        return cell;
+                    }
+                    // Escape quotes and wrap in quotes if contains comma
+                    const cellStr = String(cell || '');
+                    if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+                        return '"' + cellStr.replace(/"/g, '""') + '"';
+                    }
+                    return cellStr;
+                }).join(',');
+            }).join('\n');
+        }
+
+        // Force sync all step inputs to hidden inputs
+        function syncAllStepInputs() {
+            console.log('Syncing all step inputs...');
+
+            // Sync funding
+            const fundingStep = document.getElementById('initialFundingStep')?.value;
+            if (fundingStep) {
+                document.getElementById('initialFunding').value = fundingStep;
+                console.log('Synced funding:', fundingStep);
+            }
+
+            // Sync salaries
+            const salariesStep = document.getElementById('salariesStep')?.value;
+            if (salariesStep) {
+                document.getElementById('salaries').value = salariesStep;
+                console.log('Synced salaries:', salariesStep);
+            }
+
+            // Sync marketing
+            const marketingStep = document.getElementById('marketingStep')?.value;
+            if (marketingStep) {
+                document.getElementById('marketing').value = marketingStep;
+                console.log('Synced marketing:', marketingStep);
+            }
+
+            // Sync other costs
+            const otherStep = document.getElementById('otherStep')?.value;
+            if (otherStep) {
+                document.getElementById('other').value = otherStep;
+                console.log('Synced other costs:', otherStep);
+            }
+
+            // Sync premium price
+            const premiumPriceStep = document.getElementById('premiumPriceStep')?.value;
+            if (premiumPriceStep) {
+                document.getElementById('premiumPrice').value = premiumPriceStep;
+                console.log('Synced premium price:', premiumPriceStep);
+            }
+
+            // Sync premium conversion
+            const premiumConversionStep = document.getElementById('premiumConversionStep')?.value;
+            if (premiumConversionStep) {
+                document.getElementById('premiumConversion').value = premiumConversionStep;
+                console.log('Synced premium conversion:', premiumConversionStep);
+            }
+
+            // Sync loan size and commission
+            const loanSize1Step = document.getElementById('loanSize1Step')?.value;
+            if (loanSize1Step) {
+                document.getElementById('loanSize1').value = loanSize1Step;
+                console.log('Synced loan size 1:', loanSize1Step);
+            }
+
+            const commission1Step = document.getElementById('commission1Step')?.value;
+            if (commission1Step) {
+                document.getElementById('commission1').value = commission1Step;
+                console.log('Synced commission 1:', commission1Step);
+            }
+        }
+
+        // Functions to connect step inputs to calculation inputs
+        function updateFunding() {
+            const value = document.getElementById('initialFundingStep').value;
+            console.log('updateFunding called with value:', value);
+            document.getElementById('initialFunding').value = value;
+            // Force immediate update of the display
+            updateStepSummary();
+            debouncedUpdate();
+        }
+
+        function updateSalaries() {
+            const value = document.getElementById('salariesStep').value;
+            document.getElementById('salaries').value = value;
+            document.getElementById('salariesCurrent').textContent = value;
+            debouncedUpdate();
+        }
+
+        function updateMarketing() {
+            const value = document.getElementById('marketingStep').value;
+            document.getElementById('marketing').value = value;
+            document.getElementById('marketingCurrent').textContent = value;
+            debouncedUpdate();
+        }
+
+        function updateOther() {
+            const value = document.getElementById('otherStep').value;
+            document.getElementById('other').value = value;
+            document.getElementById('otherCurrent').textContent = value;
+            debouncedUpdate();
+        }
+
+        function updatePremiumPrice() {
+            const value = document.getElementById('premiumPriceStep').value;
+            document.getElementById('premiumPrice').value = value;
+            debouncedUpdate();
+        }
+
+        function updatePremiumConversion() {
+            const value = document.getElementById('premiumConversionStep').value;
+            document.getElementById('premiumConversion').value = value;
+            debouncedUpdate();
+        }
+
+        function updateLoanSize1() {
+            const value = document.getElementById('loanSize1Step').value;
+            document.getElementById('loanSize1').value = value;
+            updateLoanDisplays();
+            debouncedUpdate();
+        }
+
+        function updateCommission1() {
+            const value = document.getElementById('commission1Step').value;
+            document.getElementById('commission1').value = value;
+            updateLoanDisplays();
+            debouncedUpdate();
+        }
+
+        function updateLoanDisplays() {
+            const loanSize1 = parseFloat(document.getElementById('loanSize1').value) || 2000;
+            const commission1 = parseFloat(document.getElementById('commission1').value) || 0.5;
+            const commissionPerLoan1 = loanSize1 * (commission1 / 100);
+            document.getElementById('commissionPerLoan1').textContent = commissionPerLoan1.toFixed(0);
+        }
+
+        // Sync step inputs with hidden inputs on load
+        function syncStepInputs() {
+            // Sync from hidden to step inputs
+            document.getElementById('initialFundingStep').value = document.getElementById('initialFunding').value;
+            document.getElementById('salariesStep').value = document.getElementById('salaries').value;
+            document.getElementById('marketingStep').value = document.getElementById('marketing').value;
+            document.getElementById('otherStep').value = document.getElementById('other').value;
+            document.getElementById('premiumPriceStep').value = document.getElementById('premiumPrice').value;
+            document.getElementById('premiumConversionStep').value = document.getElementById('premiumConversion').value;
+            document.getElementById('loanSize1Step').value = document.getElementById('loanSize1').value;
+            document.getElementById('commission1Step').value = document.getElementById('commission1').value;
+
+            updateLoanDisplays();
+        }
+
         // Initialize on load (non-blocking)
         setTimeout(() => {
+            syncStepInputs();
             updateModel();
+            updateProgress(); // Set initial progress
         }, 10);
         
         // Fetch exchange rates in background (non-blocking)
